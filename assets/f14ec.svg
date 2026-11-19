@@ -1,0 +1,16 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="icon / tabler-icons / list-search" clip-path="url(#clip0_0_597)">
+<g id="Vector">
+</g>
+<path id="Vector_2" d="M38 30C38 34.4183 34.4183 38 30 38C25.5817 38 22 34.4183 22 30C22 25.5817 25.5817 22 30 22C34.4183 22 38 25.5817 38 30Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#398653"/>
+<path id="Vector_3" d="M37 37L42 42" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#398653"/>
+<path id="Vector_4" d="M8 12H40" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#398653"/>
+<path id="Vector_5" d="M8 24H16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#398653"/>
+<path id="Vector_6" d="M8 36H16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#398653"/>
+</g>
+<defs>
+<clipPath id="clip0_0_597">
+<rect width="48" height="48" fill="white"/>
+</clipPath>
+</defs>
+</svg>
