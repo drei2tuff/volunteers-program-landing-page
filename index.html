@@ -6,7 +6,11 @@
     <meta name="theme-color" content="#064a9b">
     <meta name="description" content="Find your place to serve with Bayanihang QC. Explore volunteer opportunities and make a difference in Quezon City.">
     <title>Bayanihang QC | Volunteer with us</title>
+    <link rel="stylesheet" href="tailwind.generated.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
     <script src="app.js" defer></script>
   </head>
   <body>
@@ -166,31 +170,46 @@
         </div>
       </section>
 
-      <section class="why-volunteer section-pad">
-        <img class="section-glow section-glow--yellow" src="assets/28f0b.svg" alt="">
-        <div class="page-width why-volunteer__inner">
-          <h2>Why Volunteer?</h2>
-          <p class="why-volunteer__intro">Volunteering is more than giving your time. It's an opportunity to build new skills, connect with like-minded individuals, gain valuable experiences, and create positive impact in communities across Quezon City.</p>
-          <div class="impact-slider" role="region" aria-label="Volunteer impact photos">
-            <div class="impact-slider__viewport" tabindex="0" aria-label="Drag or use the arrow buttons to browse photos">
+      <section id="why-volunteer" class="why-volunteer section-pad" aria-labelledby="why-volunteer-title">
+        <div class="why-volunteer__ambient" aria-hidden="true"></div>
+        <div class="why-volunteer__layout page-width relative z-10 grid items-center">
+          <div class="why-volunteer__copy relative z-10 flex flex-col justify-center">
+            <p class="eyebrow eyebrow--orange why-volunteer__eyebrow">Bayanihang QC · Stories of service</p>
+            <h2 id="why-volunteer-title" class="why-volunteer__title">Why Volunteer?</h2>
+            <p class="why-volunteer__intro">Volunteering is more than giving your time. It's an opportunity to build new skills, connect with like-minded individuals, gain valuable experiences, and create positive impact in communities across Quezon City.</p>
+            <a class="button button--blue why-volunteer__cta" href="#opportunities">Find your way to make an impact <span aria-hidden="true">&rarr;</span></a>
+            <p class="why-volunteer__note">Many hands. One stronger community.</p>
+          </div>
+
+          <div class="why-volunteer__visual relative z-10">
+            <div class="why-volunteer__visual-heading">
+              <span>Community in action</span>
+              <span class="why-volunteer__visual-index"><span>01</span><i></i><span>03</span></span>
+            </div>
+            <div class="impact-slider" role="region" aria-label="Volunteer impact photos">
+              <div class="impact-slider__viewport relative" tabindex="0" aria-label="Drag or use the arrow buttons to browse photos">
               <div class="impact-slider__track">
-                <figure class="impact-slider__slide" aria-hidden="true"><img src="assets/3af52.png" alt=""></figure>
-                <figure class="impact-slider__slide" aria-hidden="true"><img src="assets/ee165.png" alt=""></figure>
-                <figure class="impact-slider__slide" aria-hidden="true"><img src="assets/cb67a.png" alt=""></figure>
-                <figure class="impact-slider__slide"><img src="assets/3af52.png" alt="Volunteers organizing materials for a community program"></figure>
-                <figure class="impact-slider__slide"><img src="assets/ee165.png" alt="A volunteer helping with community work"></figure>
-                <figure class="impact-slider__slide"><img src="assets/cb67a.png" alt="Community members working together"></figure>
-                <figure class="impact-slider__slide" aria-hidden="true"><img src="assets/3af52.png" alt=""></figure>
-                <figure class="impact-slider__slide" aria-hidden="true"><img src="assets/ee165.png" alt=""></figure>
-                <figure class="impact-slider__slide" aria-hidden="true"><img src="assets/cb67a.png" alt=""></figure>
+                  <figure class="impact-slider__slide" aria-hidden="true"><div class="impact-slider__card"><img class="impact-slider__image" src="assets/3af52.png" alt="" loading="lazy" decoding="async"><figcaption><span>01</span> A community at work</figcaption></div></figure>
+                  <figure class="impact-slider__slide" aria-hidden="true"><div class="impact-slider__card"><img class="impact-slider__image" src="assets/ee165.png" alt="" loading="lazy" decoding="async"><figcaption><span>02</span> Skills shared with care</figcaption></div></figure>
+                  <figure class="impact-slider__slide" aria-hidden="true"><div class="impact-slider__card"><img class="impact-slider__image" src="assets/cb67a.png" alt="" loading="lazy" decoding="async"><figcaption><span>03</span> Better, together</figcaption></div></figure>
+                  <figure class="impact-slider__slide"><div class="impact-slider__card"><img class="impact-slider__image" src="assets/3af52.png" alt="Volunteers organizing materials for a community program" loading="lazy" decoding="async"><figcaption><span>01</span> A community at work</figcaption></div></figure>
+                  <figure class="impact-slider__slide"><div class="impact-slider__card"><img class="impact-slider__image" src="assets/ee165.png" alt="A volunteer helping with community work" loading="lazy" decoding="async"><figcaption><span>02</span> Skills shared with care</figcaption></div></figure>
+                  <figure class="impact-slider__slide"><div class="impact-slider__card"><img class="impact-slider__image" src="assets/cb67a.png" alt="Community members working together" loading="lazy" decoding="async"><figcaption><span>03</span> Better, together</figcaption></div></figure>
+                  <figure class="impact-slider__slide" aria-hidden="true"><div class="impact-slider__card"><img class="impact-slider__image" src="assets/3af52.png" alt="" loading="lazy" decoding="async"><figcaption><span>01</span> A community at work</figcaption></div></figure>
+                  <figure class="impact-slider__slide" aria-hidden="true"><div class="impact-slider__card"><img class="impact-slider__image" src="assets/ee165.png" alt="" loading="lazy" decoding="async"><figcaption><span>02</span> Skills shared with care</figcaption></div></figure>
+                  <figure class="impact-slider__slide" aria-hidden="true"><div class="impact-slider__card"><img class="impact-slider__image" src="assets/cb67a.png" alt="" loading="lazy" decoding="async"><figcaption><span>03</span> Better, together</figcaption></div></figure>
+                </div>
+                <span class="impact-slider__cursor" aria-hidden="true">DRAG</span>
               </div>
-              <span class="impact-slider__cursor" aria-hidden="true">DRAG</span>
+              <div class="impact-slider__footer">
+                <p class="sr-only impact-slider__status" aria-live="polite"></p>
+                <span class="impact-slider__hint" aria-hidden="true">Drag to explore</span>
+                <div class="impact-slider__controls">
+                  <button class="impact-slider__arrow impact-slider__arrow--previous" type="button" aria-label="Previous volunteer photo">&larr;</button>
+                  <button class="impact-slider__arrow impact-slider__arrow--next" type="button" aria-label="Next volunteer photo">&rarr;</button>
+                </div>
+              </div>
             </div>
-            <div class="impact-slider__controls">
-              <button class="impact-slider__arrow impact-slider__arrow--previous" type="button" aria-label="Previous volunteer photo">&larr;</button>
-              <button class="impact-slider__arrow impact-slider__arrow--next" type="button" aria-label="Next volunteer photo">&rarr;</button>
-            </div>
-            <p class="sr-only impact-slider__status" aria-live="polite"></p>
           </div>
         </div>
       </section>
