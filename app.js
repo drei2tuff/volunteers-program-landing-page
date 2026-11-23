@@ -94,6 +94,142 @@ let ambientTween;
 
 gsap.registerPlugin(ScrollTrigger);
 
+const partnerGrid = document.querySelector(".partner-grid");
+const partnerSection = document.querySelector(".partners");
+const partnerCopy = partnerSection.querySelector(".partners__copy");
+const partnerTitle = partnerCopy.querySelector("h2");
+const partnerDescription = partnerCopy.querySelector("p");
+const partnerLogoAssets = [
+  { src: "assets/National-Volunteer.svg" },
+  { src: "assets/PartnerShip.svg" },
+  { src: "assets/Vps-Partner-1 .svg" },
+  { src: "assets/Vps-Partner-2 .svg" },
+  { src: "assets/Vps-Partner-DSWD.svg" },
+  { src: "assets/Vps-Partner-association.svg" },
+  { src: "assets/Vps-Partner-gaming.svg" },
+  { src: "assets/Vps-Partner-global.svg" },
+  { src: "assets/Vps-Partner3 .svg" },
+];
+const partnerCells = Array.from(partnerGrid.querySelectorAll(".partner-cell"));
+
+function shufflePartnerLogos(logos) {
+  const shuffledLogos = [...logos];
+
+  for (let index = shuffledLogos.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffledLogos[index], shuffledLogos[swapIndex]] = [shuffledLogos[swapIndex], shuffledLogos[index]];
+  }
+
+  return shuffledLogos;
+}
+
+const shuffledPartnerLogos = shufflePartnerLogos(partnerLogoAssets);
+const partnerCellStates = partnerCells.map((cell, index) => {
+  const currentImage = cell.querySelector(".partner-cell__logo--current");
+  const currentLogo = shuffledPartnerLogos[index];
+  currentImage.src = currentLogo.src;
+
+  return {
+    cell,
+    currentImage,
+    nextImage: cell.querySelector(".partner-cell__logo--next"),
+    currentLogo,
+  };
+});
+const availablePartnerLogos = shuffledPartnerLogos.slice(partnerCells.length);
+
+if (!reduceMotion) {
+  partnerGrid.classList.add("is-rotating");
+
+  function rotatePartnerCell(cellState, onComplete) {
+    const nextLogo = availablePartnerLogos.shift();
+    const outgoingLogo = cellState.currentLogo;
+    const travelDistance = cellState.cell.clientHeight;
+    cellState.nextImage.src = nextLogo.src;
+
+    gsap.set(cellState.nextImage, { y: travelDistance, autoAlpha: 0 });
+    gsap.timeline({
+      onComplete: () => {
+        const outgoingImage = cellState.currentImage;
+        const incomingImage = cellState.nextImage;
+
+        outgoingImage.classList.replace("partner-cell__logo--current", "partner-cell__logo--next");
+        incomingImage.classList.replace("partner-cell__logo--next", "partner-cell__logo--current");
+        cellState.currentImage = incomingImage;
+        cellState.nextImage = outgoingImage;
+        cellState.currentLogo = nextLogo;
+
+        gsap.set(cellState.currentImage, { clearProps: "transform,opacity,visibility" });
+        gsap.set(cellState.nextImage, { clearProps: "transform,opacity,visibility" });
+        availablePartnerLogos.push(outgoingLogo);
+        onComplete();
+      },
+    })
+      .to(cellState.currentImage, {
+        y: -travelDistance,
+        autoAlpha: 0,
+        duration: .75,
+        ease: "power2.inOut",
+      }, 0)
+      .to(cellState.nextImage, {
+        y: 0,
+        autoAlpha: 1,
+        duration: .75,
+        ease: "power2.inOut",
+      }, 0);
+  }
+
+  function rotatePartnerGrid() {
+    let nextCellIndex = 0;
+    let completedCells = 0;
+
+    function scheduleNextCell() {
+      if (nextCellIndex === partnerCellStates.length) return;
+      if (availablePartnerLogos.length === 0) {
+        gsap.delayedCall(.06, scheduleNextCell);
+        return;
+      }
+
+      const cellState = partnerCellStates[nextCellIndex];
+      nextCellIndex += 1;
+      rotatePartnerCell(cellState, () => {
+        completedCells += 1;
+        if (completedCells === partnerCellStates.length) {
+          gsap.delayedCall(2.4, rotatePartnerGrid);
+        }
+      });
+
+      gsap.delayedCall(.12, scheduleNextCell);
+    }
+
+    scheduleNextCell();
+  }
+
+  gsap.delayedCall(1.8, rotatePartnerGrid);
+}
+
+let partnerIntroPlayed = false;
+
+function revealPartnerSection() {
+  if (partnerIntroPlayed) return;
+  partnerIntroPlayed = true;
+
+  gsap.timeline({ defaults: { ease: "power3.out" } })
+    .to(partnerTitle, { autoAlpha: 1, y: 0, duration: .56 }, 0)
+    .to(partnerDescription, { autoAlpha: 1, y: 0, duration: .56 }, .13)
+    .to(partnerGrid, { autoAlpha: 1, y: 0, duration: .62 }, .27);
+}
+
+if (!reduceMotion) {
+  gsap.set([partnerTitle, partnerDescription, partnerGrid], { autoAlpha: 0, y: 22 });
+  ScrollTrigger.create({
+    trigger: partnerSection,
+    start: "top 75%",
+    onEnter: revealPartnerSection,
+    onEnterBack: revealPartnerSection,
+  });
+}
+
 function getImpactOffset(index) {
   const slide = impactSlides[index];
   return impactViewport.clientWidth / 2 - slide.offsetLeft - slide.offsetWidth / 2;
