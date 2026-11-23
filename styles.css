@@ -1057,9 +1057,20 @@ button {
   opacity: .45;
 }
 
+.partners__watermark {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  right: -82px;
+  width: min(29vw, 360px);
+  transform: translateY(-50%);
+  opacity: .40;
+  pointer-events: none;
+}
+
 .partners__inner {
   display: grid;
-  grid-template-columns: minmax(280px, .9fr) 1.1fr;
+  grid-template-columns: 1.1fr minmax(280px, .9fr);
   align-items: center;
   gap: 80px;
 }
@@ -1081,16 +1092,45 @@ button {
 .partner-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: center;
-  justify-items: center;
-  gap: 22px 18px;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  height: calc(var(--partner-cell-height, 96px) * 2);
+  border: 1px solid rgba(0, 37, 86, .14);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .58);
+  overflow: hidden;
 }
 
-.partner-grid img {
-  width: 104px;
-  height: 82px;
+.partner-cell {
+  display: grid;
+  min-width: 0;
+  place-items: center;
+  overflow: hidden;
+  padding: 12px;
+}
+
+.partner-cell:not(:nth-child(3n)) {
+  border-right: 1px solid rgba(0, 37, 86, .12);
+}
+
+.partner-cell:nth-child(-n+3) {
+  border-bottom: 1px solid rgba(0, 37, 86, .12);
+}
+
+.partner-cell__logo {
+  grid-area: 1 / 1;
+  display: block;
+  width: min(100%, 136px);
+  height: 62px;
   object-fit: contain;
-  opacity: .62;
+}
+
+.partner-cell__logo--next {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.partner-grid.is-rotating .partner-cell__logo {
+  will-change: transform, opacity;
 }
 
 .departments {
@@ -1468,17 +1508,29 @@ button {
     gap: 28px;
   }
 
+  .partner-grid {
+    --partner-cell-height: 78px;
+  }
+
+  .partners__watermark {
+    top: auto;
+    right: -74px;
+    bottom: 35px;
+    width: 220px;
+    transform: none;
+    opacity: .40;
+  }
+
   .partners__copy {
     text-align: center;
   }
 
-  .partner-grid {
-    gap: 12px;
+  .partner-cell {
+    padding: 8px;
   }
 
-  .partner-grid img {
-    width: 82px;
-    height: 66px;
+  .partner-cell__logo {
+    height: 48px;
   }
 
   .departments {
