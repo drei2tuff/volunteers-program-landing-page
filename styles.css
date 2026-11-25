@@ -437,7 +437,7 @@ button {
 }
 
 .welcome-carousel {
-  --welcome-carousel-gap: clamp(10px, 1.4vw, 20px);
+  --welcome-carousel-gap: clamp(12px, 1.5vw, 24px);
   width: 100%;
   min-width: 0;
 }
@@ -1549,7 +1549,7 @@ button {
   }
 
   .welcome-carousel__slide {
-    flex-basis: calc((100% - var(--welcome-carousel-gap)) / 2);
+    flex-basis: 44%;
   }
 
   .welcome-carousel__card img {
@@ -1665,11 +1665,11 @@ button {
   }
 
   .welcome-carousel__slide {
-    flex-basis: min(82%, 24rem);
+    flex-basis: 78%;
   }
 
   .welcome-carousel__card img {
-    aspect-ratio: .82;
+    aspect-ratio: 1.12;
   }
 
   .welcome-carousel__card figcaption {
