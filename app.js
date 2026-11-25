@@ -33,26 +33,132 @@ programTabs.forEach((tab) => {
   });
 });
 
-const galleryImages = [
-  document.querySelector(".photo-stack__image--front"),
-  document.querySelector(".photo-stack__image--middle"),
-  document.querySelector(".photo-stack__image--back"),
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const welcomeViewport = document.querySelector(".welcome-carousel__viewport");
+const welcomeTrack = document.querySelector(".welcome-carousel__track");
+const welcomeSlides = Array.from(document.querySelectorAll(".welcome-carousel__slide"));
+const welcomeStatus = document.querySelector(".welcome-carousel__status");
+const welcomeCounter = document.querySelector(".welcome-carousel__counter");
+const welcomePhotos = [
+  "Bayanihang QC volunteers gathered together",
+  "Volunteers working together",
+  "Volunteers serving the community",
 ];
-const gallerySources = ["assets/a3e50.png", "assets/af4fd.png", "assets/089d3.png"];
-let activePhoto = 0;
+let welcomeIndex = 3;
+let welcomeLoopIndex = null;
+let welcomeAnimating = false;
+let welcomeDragStart = null;
+let welcomeDragOffset = 0;
 
-function showNextPhoto(direction) {
-  activePhoto = (activePhoto + direction + gallerySources.length) % gallerySources.length;
-  galleryImages.forEach((image, index) => {
-    const sourceIndex = (activePhoto + index) % gallerySources.length;
-    image.src = gallerySources[sourceIndex];
-    image.className = `photo-stack__image photo-stack__image--${["front", "middle", "back"][index]}`;
-  });
-  document.querySelector(".gallery-progress span").style.transform = `translateX(${activePhoto * 100}%)`;
+function getWelcomeOffset(index) {
+  const slide = welcomeSlides[index];
+  return welcomeViewport.clientWidth / 2 - slide.offsetLeft - slide.offsetWidth / 2;
 }
 
-document.querySelector(".gallery-arrow--previous").addEventListener("click", () => showNextPhoto(-1));
-document.querySelector(".gallery-arrow--next").addEventListener("click", () => showNextPhoto(1));
+function setWelcomeCardStates(animate = false) {
+  welcomeSlides.forEach((slide, index) => {
+    const active = index === welcomeIndex;
+    const adjacent = index === welcomeIndex - 1 || index === welcomeIndex + 1;
+    const options = {
+      scale: active ? 1 : .94,
+      rotationY: index === welcomeIndex - 1 ? 5 : index === welcomeIndex + 1 ? -5 : 0,
+      opacity: active ? 1 : adjacent ? .76 : .45,
+      duration: animate && !reduceMotion ? .48 : 0,
+      ease: "power3.out",
+      overwrite: "auto",
+    };
+    if (animate && !reduceMotion) gsap.to(slide, options);
+    else gsap.set(slide, options);
+  });
+}
+
+function updateWelcomeStatus() {
+  const photoIndex = ((welcomeIndex - 3) % 3 + 3) % 3;
+  welcomeCounter.textContent = `0${photoIndex + 1} / 03`;
+  welcomeStatus.textContent = `Photo ${photoIndex + 1} of 3: ${welcomePhotos[photoIndex]}`;
+}
+
+function moveWelcomeCarousel(direction) {
+  if (welcomeAnimating) return;
+
+  let destination = welcomeIndex + direction;
+  welcomeLoopIndex = null;
+  if (destination < 3) {
+    destination = 2;
+    welcomeLoopIndex = 5;
+  } else if (destination > 5) {
+    destination = 6;
+    welcomeLoopIndex = 3;
+  }
+
+  welcomeAnimating = true;
+  welcomeIndex = destination;
+  welcomeDragOffset = 0;
+  updateWelcomeStatus();
+  setWelcomeCardStates(true);
+  gsap.to(welcomeTrack, {
+    x: getWelcomeOffset(welcomeIndex),
+    duration: reduceMotion ? 0 : .78,
+    ease: "power3.inOut",
+    overwrite: "auto",
+    onComplete: () => {
+      if (welcomeLoopIndex !== null) {
+        welcomeIndex = welcomeLoopIndex;
+        welcomeLoopIndex = null;
+        gsap.set(welcomeTrack, { x: getWelcomeOffset(welcomeIndex) });
+        setWelcomeCardStates(false);
+      }
+      welcomeAnimating = false;
+    },
+  });
+}
+
+function settleWelcomeDrag() {
+  if (welcomeDragStart === null) return;
+  const distance = welcomeDragOffset;
+  welcomeDragStart = null;
+  welcomeDragOffset = 0;
+  welcomeViewport.classList.remove("is-dragging");
+  if (Math.abs(distance) > 45) moveWelcomeCarousel(distance < 0 ? 1 : -1);
+  else gsap.to(welcomeTrack, { x: getWelcomeOffset(welcomeIndex), duration: reduceMotion ? 0 : .3, ease: "power2.out" });
+}
+
+gsap.set(welcomeTrack, { x: getWelcomeOffset(welcomeIndex) });
+setWelcomeCardStates();
+updateWelcomeStatus();
+
+welcomeViewport.addEventListener("pointerdown", (event) => {
+  if (event.button !== 0 || welcomeAnimating) return;
+  welcomeDragStart = event.clientX;
+  welcomeDragOffset = 0;
+  welcomeViewport.setPointerCapture(event.pointerId);
+  welcomeViewport.classList.add("is-dragging");
+  gsap.killTweensOf(welcomeTrack);
+});
+welcomeViewport.addEventListener("pointermove", (event) => {
+  if (welcomeDragStart === null) return;
+  welcomeDragOffset = event.clientX - welcomeDragStart;
+  gsap.set(welcomeTrack, { x: getWelcomeOffset(welcomeIndex) + welcomeDragOffset });
+});
+welcomeViewport.addEventListener("pointerup", settleWelcomeDrag);
+welcomeViewport.addEventListener("pointercancel", settleWelcomeDrag);
+welcomeViewport.addEventListener("keydown", (event) => {
+  if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+    event.preventDefault();
+    moveWelcomeCarousel(event.key === "ArrowLeft" ? -1 : 1);
+  }
+});
+document.querySelector(".welcome-carousel__arrow--previous").addEventListener("click", () => moveWelcomeCarousel(-1));
+document.querySelector(".welcome-carousel__arrow--next").addEventListener("click", () => moveWelcomeCarousel(1));
+window.addEventListener("resize", () => {
+  gsap.killTweensOf(welcomeTrack);
+  welcomeAnimating = false;
+  welcomeDragStart = null;
+  welcomeDragOffset = 0;
+  welcomeViewport.classList.remove("is-dragging");
+  gsap.set(welcomeTrack, { x: getWelcomeOffset(welcomeIndex) });
+  setWelcomeCardStates(false);
+});
 
 const departmentLogos = document.querySelector(".department-logos");
 document.querySelectorAll(".department-arrow").forEach((button, index) => {
@@ -80,7 +186,6 @@ const impactArrows = Array.from(document.querySelectorAll(".impact-slider__arrow
 const impactCursor = document.querySelector(".impact-slider__cursor");
 const impactStatus = document.querySelector(".impact-slider__status");
 const impactCurrentCounter = document.querySelector(".why-volunteer__visual-index span");
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 let impactIndex = 3;
 let impactDragStart = null;
