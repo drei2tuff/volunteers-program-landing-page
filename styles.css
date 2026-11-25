@@ -9,7 +9,7 @@
   --deep-blue: #064a9b;
   --orange: #fb792e;
   --green: #174d36;
-  --content-width: 1280px;
+  --content-width: 80rem;
 }
 
 * {
@@ -295,11 +295,12 @@ button {
 
 .welcome {
   position: relative;
-  display: flex;
-  min-height: 600px;
-  align-items: center;
   overflow: hidden;
   background: linear-gradient(108deg, #fff4d8 0%, #fff7eb 38%, #c1e9e9 100%);
+}
+
+.welcome.section-pad {
+  padding-block: clamp(3rem, 7vw, 6.5rem);
 }
 
 .welcome__glow,
@@ -310,18 +311,18 @@ button {
 }
 
 .welcome__glow--one {
-  width: min(68vw, 900px);
-  height: 120%;
-  top: -25%;
-  left: -18%;
+  width: min(68%, 56rem);
+  aspect-ratio: 1;
+  top: -28%;
+  left: -20%;
   opacity: .56;
 }
 
 .welcome__glow--two {
-  width: min(72vw, 980px);
-  height: 115%;
+  width: min(72%, 61rem);
+  aspect-ratio: 1;
   right: -24%;
-  bottom: -34%;
+  bottom: -38%;
   opacity: .45;
 }
 
@@ -331,18 +332,19 @@ button {
   display: grid;
   grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
   align-items: center;
-  gap: 55px;
+  gap: clamp(1.5rem, 5vw, 5rem);
 }
 
 .welcome__copy {
-  max-width: 615px;
+  min-width: 0;
+  max-width: 38rem;
   color: #e87939;
 }
 
 .eyebrow {
   margin: 0 0 10px;
   color: var(--blue);
-  font-size: 15px;
+  font-size: clamp(.75rem, .9vw, .9375rem);
   font-weight: 700;
   letter-spacing: .1em;
   line-height: 1.2;
@@ -358,7 +360,7 @@ button {
 .welcome h1 {
   margin: 0 0 18px;
   color: #f98948;
-  font-size: clamp(42px, 4.2vw, 60px);
+  font-size: clamp(2.25rem, 5.2vw, 4rem);
   font-weight: 700;
   letter-spacing: -.025em;
   line-height: 1.02;
@@ -367,9 +369,9 @@ button {
 
 .welcome__description {
   margin: 0;
-  max-width: 620px;
+  max-width: 39rem;
   color: #75472c;
-  font-size: 19px;
+  font-size: clamp(1rem, 1.35vw, 1.1875rem);
   line-height: 1.55;
   letter-spacing: .01em;
 }
@@ -377,19 +379,19 @@ button {
 .button-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 13px;
-  margin-top: 24px;
+  gap: clamp(.5rem, 1vw, .8125rem);
+  margin-top: clamp(1rem, 2vw, 1.5rem);
 }
 
 .button {
   display: inline-flex;
-  min-height: 46px;
+  min-height: 2.875rem;
   align-items: center;
   justify-content: center;
-  padding: 10px 21px;
+  padding: .625rem clamp(.875rem, 1.5vw, 1.3125rem);
   border: 1px solid transparent;
   border-radius: 999px;
-  font-size: 15px;
+  font-size: clamp(.875rem, 1vw, .9375rem);
   font-weight: 600;
   text-align: center;
   text-decoration: none;
@@ -429,13 +431,13 @@ button {
 .welcome__gallery {
   position: relative;
   display: flex;
-  min-height: 420px;
+  min-width: 0;
   align-items: center;
   justify-content: center;
 }
 
 .welcome-carousel {
-  --welcome-carousel-gap: clamp(10px, 1.4vw, 20px);
+  --welcome-carousel-gap: clamp(12px, 1.5vw, 24px);
   width: 100%;
   min-width: 0;
 }
@@ -545,44 +547,6 @@ button {
 .welcome-carousel__viewport:focus-visible {
   outline: 3px solid #fb792e;
   outline-offset: 4px;
-}
-
-@media (min-width: 1344px) {
-  .welcome__content {
-    grid-template-columns: minmax(0, .32fr) minmax(0, 1.70fr);
-    gap: 340px;
-  }
-
-  .welcome__copy {
-    width: 460px;
-  }
-
-  .welcome__description {
-    line-height: 1.45;
-  }
-
-  .welcome__gallery {
-    transform: translateX(max(0px, calc((90vw - var(--content-width)) / 2 - 48px)));
-  }
-}
-
-@media (min-width: 1001px) and (max-width: 1343px) {
-  .welcome__content {
-    grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
-    gap: clamp(24px, 3vw, 40px);
-  }
-
-  .welcome__copy {
-    width: 100%;
-  }
-
-  .welcome__gallery {
-    transform: none;
-  }
-
-  .welcome-carousel__card img {
-    aspect-ratio: .82;
-  }
 }
 
 .opportunities {
@@ -1577,15 +1541,11 @@ button {
 
   .welcome__content {
     grid-template-columns: 1fr;
-    gap: 36px;
+    gap: clamp(1.5rem, 5vw, 2.5rem);
   }
 
   .welcome__copy {
     width: 100%;
-  }
-
-  .welcome__gallery {
-    min-height: 340px;
   }
 
   .welcome-carousel__slide {
@@ -1696,26 +1656,12 @@ button {
     height: 18px;
   }
 
-  .welcome {
-    min-height: 0;
-    padding-block: 66px 54px;
-  }
-
-  .welcome__content {
-    grid-template-columns: 1fr;
-    gap: 26px;
-  }
-
   .welcome h1 {
-    font-size: clamp(39px, 12vw, 54px);
+    font-size: clamp(2rem, 10vw, 3.375rem);
   }
 
   .welcome__description {
-    font-size: 17px;
-  }
-
-  .welcome__gallery {
-    min-height: 300px;
+    font-size: clamp(1rem, 4.5vw, 1.125rem);
   }
 
   .welcome-carousel__slide {
@@ -1723,7 +1669,7 @@ button {
   }
 
   .welcome-carousel__card img {
-    aspect-ratio: .82;
+    aspect-ratio: 1.12;
   }
 
   .welcome-carousel__card figcaption {
