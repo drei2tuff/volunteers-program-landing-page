@@ -14,6 +14,82 @@ navigationMenu.addEventListener("click", (event) => {
   }
 });
 
+const heroCarousel = document.querySelector(".hero-carousel");
+
+if (heroCarousel) {
+  const heroSlides = Array.from(heroCarousel.querySelectorAll(".hero-carousel__slide"));
+  const heroDots = Array.from(heroCarousel.querySelectorAll(".hero-carousel__dot"));
+  const heroStatus = heroCarousel.querySelector(".hero-carousel__status");
+  const heroPrevious = heroCarousel.querySelector(".hero-carousel__arrow--previous");
+  const heroNext = heroCarousel.querySelector(".hero-carousel__arrow--next");
+  const heroAutoplayDelay = 6000;
+  let heroIndex = 0;
+  let heroAutoplayTimer = null;
+  let heroFocused = false;
+
+  function updateHeroSlide(nextIndex, announce = false) {
+    heroIndex = (nextIndex + heroSlides.length) % heroSlides.length;
+
+    heroSlides.forEach((slide, index) => {
+      const active = index === heroIndex;
+      slide.classList.toggle("is-active", active);
+      slide.setAttribute("aria-hidden", String(!active));
+      if (active) slide.removeAttribute("inert");
+      else slide.setAttribute("inert", "");
+    });
+
+    heroDots.forEach((dot, index) => {
+      const active = index === heroIndex;
+      dot.classList.toggle("is-active", active);
+      if (active) dot.setAttribute("aria-current", "true");
+      else dot.removeAttribute("aria-current");
+    });
+
+    if (announce) heroStatus.textContent = `Slide ${heroIndex + 1} of ${heroSlides.length}`;
+  }
+
+  function stopHeroAutoplay() {
+    window.clearTimeout(heroAutoplayTimer);
+    heroAutoplayTimer = null;
+  }
+
+  function scheduleHeroAutoplay() {
+    stopHeroAutoplay();
+    if (heroFocused || document.hidden) return;
+
+    heroAutoplayTimer = window.setTimeout(() => {
+      updateHeroSlide(heroIndex + 1);
+      scheduleHeroAutoplay();
+    }, heroAutoplayDelay);
+  }
+
+  function navigateHero(nextIndex) {
+    updateHeroSlide(nextIndex, true);
+    scheduleHeroAutoplay();
+  }
+
+  heroPrevious.addEventListener("click", () => navigateHero(heroIndex - 1));
+  heroNext.addEventListener("click", () => navigateHero(heroIndex + 1));
+  heroDots.forEach((dot, index) => {
+    dot.addEventListener("click", () => navigateHero(index));
+  });
+
+  heroCarousel.addEventListener("focusin", () => {
+    heroFocused = true;
+    stopHeroAutoplay();
+  });
+  heroCarousel.addEventListener("focusout", (event) => {
+    if (!heroCarousel.contains(event.relatedTarget)) {
+      heroFocused = false;
+      scheduleHeroAutoplay();
+    }
+  });
+  document.addEventListener("visibilitychange", scheduleHeroAutoplay);
+
+  updateHeroSlide(heroIndex);
+  scheduleHeroAutoplay();
+}
+
 const programTabs = document.querySelectorAll(".program-tab");
 const eventCards = document.querySelectorAll(".event-card");
 
