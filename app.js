@@ -236,15 +236,92 @@ window.addEventListener("resize", () => {
   setWelcomeCardStates(false);
 });
 
-const departmentLogos = document.querySelector(".department-logos");
-document.querySelectorAll(".department-arrow").forEach((button, index) => {
-  button.addEventListener("click", () => {
-    departmentLogos.scrollBy({
-      left: index === 0 ? -180 : 180,
-      behavior: "smooth",
-    });
+const departmentLogoElements = Array.from(document.querySelectorAll(".department-logo"));
+const departmentLogoPool = [
+  {
+    src: "assets/Quezon City Public Library.png",
+    alt: "Quezon City Public Library",
+  },
+  {
+    src: "assets/Barangay and Community Relations Department.png",
+    alt: "Barangay and Community Relations Department",
+  },
+  {
+    src: "assets/Department of Sanitation and Cleanup Works of Quezon City.png",
+    alt: "Department of Sanitation and Cleanup Works of Quezon City",
+  },
+  {
+    src: "assets/Quezon City Fire District.png",
+    alt: "Quezon City Fire District",
+  },
+  {
+    src: "assets/Quezon City Sports Development Office.png",
+    alt: "Quezon City Sports Development Office",
+  },
+  {
+    src: "assets/Quezon City Tourism Department.png",
+    alt: "Quezon City Tourism Department",
+  },
+  {
+    src: "assets/SSDD.png",
+    alt: "Social Services Development Department",
+  },
+];
+
+if (departmentLogoElements.length === 6 && !reduceMotion) {
+  departmentLogoPool.forEach((logo) => {
+    const preload = new Image();
+    preload.src = logo.src;
   });
-});
+
+  // Tracks which logo is currently displayed in each slot
+  const activeDepartmentLogos = departmentLogoPool.slice(0, 6);
+  // Single logo waiting in reserve (starts as SSDD.png)
+  let queuedDepartmentLogo = departmentLogoPool[6];
+
+  // Interval between each slot swap: 1.2s stagger, then 2s pause after the last slot
+  // before wrapping around, matching the 8s / 1.2s stagger spec
+  const slotStepDelaysMs = [1200, 1200, 1200, 1200, 1200, 2000];
+  let currentSlotIndex = 0;
+
+  const swapDepartmentSlot = (slotIndex) => {
+    if (document.hidden) {
+      window.setTimeout(() => swapDepartmentSlot(slotIndex), 1000);
+      return;
+    }
+
+    const logoImage = departmentLogoElements[slotIndex];
+    if (!logoImage) return;
+
+    const incomingLogo = queuedDepartmentLogo;
+    const outgoingLogo = activeDepartmentLogos[slotIndex];
+
+    // Fade out (500ms matching reference)
+    logoImage.classList.add("is-fading");
+
+    window.setTimeout(() => {
+      // Swap src and alt at opacity 0
+      logoImage.src = incomingLogo.src;
+      logoImage.alt = incomingLogo.alt;
+      activeDepartmentLogos[slotIndex] = incomingLogo;
+      queuedDepartmentLogo = outgoingLogo;
+
+      // Fade in on next frame
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          logoImage.classList.remove("is-fading");
+        });
+      });
+
+      // Schedule the next slot swap after the stagger delay
+      const nextSlotIndex = (slotIndex + 1) % departmentLogoElements.length;
+      window.setTimeout(() => swapDepartmentSlot(nextSlotIndex), slotStepDelaysMs[slotIndex]);
+    }, 500);
+  };
+
+  // Start first swap after initial delay
+  window.setTimeout(() => swapDepartmentSlot(currentSlotIndex), 1200);
+}
 
 const storySection = document.querySelector("#why-volunteer");
 const storyAmbient = document.querySelector(".why-volunteer__ambient");
