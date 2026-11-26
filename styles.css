@@ -1378,46 +1378,68 @@ button {
   text-align: center;
 }
 
-.department-row {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-
-.department-arrow {
-  display: grid;
-  width: 32px;
-  height: 32px;
-  flex: 0 0 auto;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: #fff;
-  color: var(--blue);
-  font-size: 25px;
-  cursor: pointer;
-}
-
 .department-logos {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 20px;
+  align-items: center;
+  justify-items: center;
+}
+
+.department-slot {
   display: flex;
   width: 100%;
-  overflow-x: auto;
+  min-width: 0;
+  height: 90px;
   align-items: center;
-  gap: 18px;
-  scrollbar-width: none;
-  scroll-snap-type: x mandatory;
+  justify-content: center;
+  background: transparent;
 }
 
-.department-logos::-webkit-scrollbar {
-  display: none;
-}
-
-.department-logos img {
-  flex: 0 0 120px;
-  height: 82px;
+.department-logo {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
-  opacity: .55;
-  scroll-snap-align: center;
+  background: transparent;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.department-logo.is-fading {
+  opacity: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .department-logo:hover {
+    transform: scale(1.08);
+    transition: transform 0.3s ease;
+  }
+}
+
+@media (min-width: 640px) {
+  .department-logos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px 32px;
+  }
+
+  .department-slot {
+    height: 100px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .department-logos {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 28px;
+  }
+
+  .department-slot {
+    height: 110px;
+  }
 }
 
 .footer {
@@ -1753,14 +1775,6 @@ button {
     min-height: 250px;
   }
 
-  .department-row {
-    gap: 8px;
-  }
-
-  .department-logos {
-    gap: 10px;
-  }
-
   .footer__inner {
     grid-template-columns: 1fr;
     gap: 28px;
@@ -1795,6 +1809,11 @@ button {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .department-logo {
+    animation: none;
+    transition: none;
   }
 
   *,
