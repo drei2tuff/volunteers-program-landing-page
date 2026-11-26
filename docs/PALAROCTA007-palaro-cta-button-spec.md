@@ -4,7 +4,7 @@
 **Status:** Implemented  
 **Page:** Bayanihang QC landing page  
 **Target section:** Hero carousel — slide 1 (`assets/palaro-banner.png`)  
-**Target files:** `index.html`, `styles.css`, `app.js`
+**Target files:** `index.html`, `styles.css`, `coming-soon.html`
 
 ---
 
@@ -16,7 +16,7 @@ Add a "Volunteer for Palarong Pambansa 2027 Now!" call-to-action button that app
 
 ## Link Destination
 
-- **Placeholder URL:** A local or hosted `/coming-soon` page (e.g., `href="/coming-soon"` or a minimal hosted URL) with a **"Coming Soon"** message, until the real Palarong Pambansa 2027 volunteer registration form is published.
+- **Placeholder URL:** A local `coming-soon.html` page (`href="coming-soon.html"`, relative path so it works both locally and under GitHub Pages subpaths like `/volunteers-program-landing-page/`) with a **"Coming Soon"** message and a **"← Back to Bayanihang QC"** button (`href="./"`), until the real Palarong Pambansa 2027 volunteer registration form is published.
 - **Final URL:** To be updated when the external registration URL is confirmed.
 - **Target:** Opens in a new tab (`target="_blank" rel="noopener noreferrer"`) since it is an external resource.
 
@@ -43,7 +43,7 @@ Volunteer for Palarong Pambansa 2027 Now!
   <img class="hero__image" src="assets/palaro-banner.png" alt="" fetchpriority="high">
   <a
     class="palaro-cta"
-    href="/coming-soon"
+    href="coming-soon.html"
     target="_blank"
     rel="noopener noreferrer"
     aria-label="Volunteer for Palarong Pambansa 2027 — opens registration page"
@@ -67,12 +67,12 @@ Volunteer for Palarong Pambansa 2027 Now!
 | Background | `#C8102E` (Palaro red) | Dominant accent from the banner text |
 | Text | `#ffffff` | High contrast on red |
 | Border | None | Clean, solid CTA |
-| Border-radius | `6px` | Slightly rounded, matches site button language |
+| Border-radius | `999px` | Pill shape matching site button language |
 | Box-shadow | None | Consistent with site's flat UI |
 
 ### Typography & Sizing
 
-- **Font size:** `clamp(12px, 1.4vw, 15px)` — stays readable at all widths without wrapping aggressively
+- **Font size:** `clamp(8px, 1.05vw, 16px)` — scales proportionally with the 16:9 hero banner from `320px` mobile up to `2560px` desktop without overflowing
 - **Font weight:** `700` (bold)
 - **Letter spacing:** `0.02em`
 - **Text transform:** `none` — keep sentence case as written
@@ -82,33 +82,35 @@ Volunteer for Palarong Pambansa 2027 Now!
 ```css
 .palaro-cta {
   position: absolute;
-  bottom: clamp(24px, 5%, 56px);
-  left: clamp(16px, 6%, 80px);
+  top: 75%;
+  left: 11.5%;
   z-index: 3;
-  display: inline-block;
-  padding: clamp(10px, 1.4vw, 14px) clamp(18px, 2.8vw, 32px);
-  background: #C8102E;
-  color: #ffffff;
-  font-size: clamp(12px, 1.4vw, 15px);
+  display: inline-flex;
+  align-items: center;
+  max-width: calc(100% - 23%);
+  padding: clamp(5px, 0.9vw, 14px) clamp(10px, 2vw, 32px);
+  background: #c8102e;
+  color: #fff;
+  font-size: clamp(8px, 1.05vw, 16px);
   font-weight: 700;
   letter-spacing: 0.02em;
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: 999px;
   white-space: nowrap;
-  transition: filter 0.25s ease, transform 0.25s ease;
+  transition: transform .18s ease, filter .18s ease;
 }
 ```
 
-- `white-space: nowrap` prevents the label from wrapping mid-phrase on medium widths.
-- `bottom` and `left` use `clamp()` so the button scales proportionally from 320px to 2560px without getting clipped or drifting over the banner text.
+- `white-space: nowrap` prevents the label from wrapping mid-phrase.
+- Pure percentage `left: 11.5%` and `vw`-scaled `clamp()` padding/font-size ensure proportional scaling across `320px` to `2560px` without pushing the button rightward on mobile.
 
 ### Hover (desktop pointer devices only)
 
 ```css
 @media (hover: hover) and (pointer: fine) {
   .palaro-cta:hover {
+    transform: translateY(-2px);
     filter: brightness(1.12);
-    transform: scale(1.03);
   }
 }
 ```
@@ -140,14 +142,13 @@ The existing carousel CSS and `updateHeroSlide()` in `app.js` already handle thi
 
 The button must remain visible and usable at all breakpoints including below `480px`:
 
-| Breakpoint | `bottom` | `left` | Approx button size |
+| Breakpoint | `top` | `left` | Approx button size |
 | :--- | :--- | :--- | :--- |
-| `320px` | `~24px` | `~16px` | `~12px font, ~10px/18px padding` |
-| `480px` | `~24px` | `~29px` | `~13px font, ~11px/22px padding` |
-| `768px` | `~38px` | `~46px` | `~14px font, ~11px/22px padding` |
-| `1024px+` | `~50px` | `~64px` | `~15px font, ~14px/32px padding` |
+| `<= 700px` (Mobile) | `58%` | `11.5%` | `8px font, ~5px/10px padding` |
+| `701px – 900px` (Tablet) | `66%` | `11.5%` | `8px–9.5px font, ~7px/14px–18px padding` |
+| `> 900px` (Desktop) | `75%` | `11.5%` | `9.5px–16px font, ~9px–14px / 18px–32px padding` |
 
-All values are driven by `clamp()` — no additional media query overrides required unless visual inspection reveals edge-case misalignment.
+Stepping `top` down from `75%` on desktop to `66%` on tablet (`<= 900px`) and `58%` on mobile (`<= 700px`) keeps the button clear of the bottom `.hero-carousel__controls` while keeping it below the headline.
 
 > [!IMPORTANT]
 > Do **not** add `display: none` or hide the button below any breakpoint. The button is a primary CTA and must remain visible even on the smallest viewports.
